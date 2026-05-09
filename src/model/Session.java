@@ -1,26 +1,24 @@
 package model;
 
-// Session = kullanıcının bu oturumda girdiği tüm bilgiler
-// Step 1'de profile, Step 2'de seçimler buraya yazılıyor
+// Session : kullanıcının bu oturumda girdiği tüm bilgiler
+// Step 1 de profile, Step 2 de seçimler buraya yazılıyor
 // böylece bir sonraki ekranda verilere ulaşabiliyoruz
 // (hepsini ana frame'de tek bir Session nesnesi olarak dolaştıracağız)
 public class Session {
 
-    // Step 1 — Profile bilgileri
+    //Profile bilgileri
     private String username;
     private String school;
     private String sessionName;
 
-    // Step 2 — Define seçimleri
+    //Define seçimleri
     private QualityType qualityType;
     private Mode mode;
     private Scenario scenario;
-
     public Session() {
-        // başlangıçta her şey boş, kullanıcı wizard'da doldurduğunda güncellenecek
     }
 
-    // Step 1 validation için yardımcı
+    // profile validation için yardımcı
     // true dönerse 3 alan da dolu demektir
     public boolean isProfileComplete() {
         return username != null && !username.trim().isEmpty()
@@ -28,13 +26,13 @@ public class Session {
                 && sessionName != null && !sessionName.trim().isEmpty();
     }
 
-    // Step 2 validation için yardımcı
-    // hem quality hem mode hem scenario seçilmişse true
+    // define validation için yardımcı
+    // hem quality hem mode hem scenario seçilmişise true
     public boolean isDefineComplete() {
         return qualityType != null && mode != null && scenario != null;
     }
 
-    // ---- getter / setter'lar ----
+    // getter / setter
 
     public String getUsername() {
         return username;

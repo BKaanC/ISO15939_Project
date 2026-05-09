@@ -1,8 +1,8 @@
 package model;
 
-// "Higher is better" yani değer ne kadar yüksekse o kadar iyi
-// örn: SUS score, Uptime, WCAG compliance gibi metrikler
-// formül (pdf'ten): score = 1 + (value - min) / (max - min) * 4
+// Higher is better, yani değer ne kadar yüksekse o kadar iyi
+// SUS score, Uptime, WCAG compliance gibi metrikler
+// formül pdfdeki: score = 1 + (value - min) / (max - min) * 4
 public class HigherIsBetterMetric extends Metric {
 
     public HigherIsBetterMetric(String name, int coefficient,
@@ -19,7 +19,7 @@ public class HigherIsBetterMetric extends Metric {
             return 1.0;
         }
         // formülü uyguladık
-        double raw = 1.0 + ((value - minValue) / (maxValue - minValue)) * 4.0;
+        double raw = 1 + ((value - minValue) / (maxValue - minValue)) * 4;
         // 0.5'e yuvarla ve 1-5 arasında tut
         return roundToHalf(raw);
     }
@@ -27,6 +27,6 @@ public class HigherIsBetterMetric extends Metric {
     @Override
     public String getDirectionLabel() {
         // tabloda gösterilen ok ile birlikte etiket
-        return "Higher \u2191";
+        return "Higher ↑";
     }
 }

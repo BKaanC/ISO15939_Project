@@ -12,7 +12,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -21,7 +20,7 @@ import controller.Navigator;
 import model.Scenario;
 import model.Session;
 
-// Step 5 — Analyse
+// Analyse
 // 3 bölümden oluşuyor:
 //   5a) her dimension'ın ağırlıklı ortalaması (JProgressBar ile)
 //   5b) radar chart (RadarChartPanel — bonus)
@@ -183,9 +182,9 @@ public class AnalysePanel extends JPanel implements WizardStep {
         gapPanel.add(padLabel("Quality level: " + level, Font.PLAIN, 13));
         gapPanel.add(Box.createVerticalStrut(6));
 
-        JLabel note = new JLabel(
-                "<html><i>This dimension has the lowest score and requires the most improvement.</i></html>");
-        note.setForeground(new Color(107, 114, 128));
+        JLabel note = new JLabel("This dimension has the lowest score and requires the most improvement.");
+        note.setFont(new Font("SansSerif", Font.ITALIC, 12));
+        note.setForeground(Color.GRAY);
         gapPanel.add(note);
     }
 
@@ -207,28 +206,21 @@ public class AnalysePanel extends JPanel implements WizardStep {
 
     // progress bar rengi skora göre değişsin
     private Color colorFor(double score) {
-        if (score >= 4.0) return new Color(34, 197, 94);   // yeşil
-        if (score >= 3.0) return new Color(234, 179, 8);   // sarı
-        if (score >= 2.0) return new Color(249, 115, 22);  // turuncu
-        return new Color(239, 68, 68);                     // kırmızı
+        if (score >= 4.0) return new Color(0, 180, 0);     // yeşil
+        if (score >= 3.0) return new Color(220, 180, 0);   // sarı
+        if (score >= 2.0) return new Color(240, 130, 0);   // turuncu
+        return new Color(220, 50, 50);                     // kırmızı
     }
 
-    // "Finish / Restart" — oturumu sıfırla ve başa dön
+    // restart = oturumu sıfırla ve başa dön
     private void onRestart() {
-        int answer = JOptionPane.showConfirmDialog(this,
-                "Start a new session? Current data will be cleared.",
-                "Restart",
-                JOptionPane.YES_NO_OPTION);
-        if (answer == JOptionPane.YES_OPTION) {
-            // session'ı temizle
-            session.setUsername(null);
-            session.setSchool(null);
-            session.setSessionName(null);
-            session.setQualityType(null);
-            session.setMode(null);
-            session.setScenario(null);
-            // ilk ekrana dön
-            navigator.goTo(0);
-        }
+        // session'daki bilgileri temizle
+        session.setUsername(null);
+        session.setSchool(null);
+        session.setSessionName(null);
+        session.setQualityType(null);
+        session.setMode(null);
+        session.setScenario(null);
+        navigator.goTo(0);
     }
 }

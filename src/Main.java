@@ -3,8 +3,8 @@ import javax.swing.SwingUtilities;
 import view.MainFrame;
 
 // uygulamanın giriş noktası
-// Swing bileşenleri EDT (Event Dispatch Thread) üzerinde oluşturulmalı
-// bu yüzden MainFrame'i invokeLater ile başlatıyoruz
+// swing pencereleri özel bir threadde açılmalı
+// bu yüzden MainFrame'i invokelater ile başlatıyoruz
 public class Main {
 
     public static void main(String[] args) {

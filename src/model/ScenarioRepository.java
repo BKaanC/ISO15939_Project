@@ -5,10 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// ScenarioRepository = tüm senaryoları tutan merkezi sınıf
-// pdf'te "scenario data may be defined hard-coded" diyor, biz de öyle yaptık
-// HashMap kullandık çünkü Mode'a göre senaryo listesini çabuk bulmak lazım
-// (collections kriteri de bu şekilde kapsanmış oluyor — ArrayList + HashMap)
+// ScenarioRepository: tüm senaryoları tutan merkezi sınıf
+// collections kriteri  kapsanmış oluyor - ArrayList + HashMap
 public class ScenarioRepository {
 
     // key = Mode, value = o moda ait senaryolar
@@ -32,15 +30,13 @@ public class ScenarioRepository {
         return list;
     }
 
-    // ======================= EDUCATION =======================
-    // pdf'teki örnek dataset'ten üretildi (Scenario C)
-    // Scenario D'yi de aynı yapıda farklı değerlerle kendim oluşturdum
+    //                          EDUCATION
     private void loadEducationScenarios() {
         List<Scenario> list = new ArrayList<>();
 
-        // ---------- Scenario C — Team Alpha (pdf'teki örnek) ----------
+        // Scenario C - Team Alpha
         Scenario c = new Scenario(
-                "Scenario C \u2014 Team Alpha",
+                "Scenario C - Team Alpha",
                 "LMS system, overall strong performance",
                 Mode.EDUCATION);
 
@@ -71,9 +67,9 @@ public class ScenarioRepository {
 
         list.add(c);
 
-        // ---------- Scenario D — Team Beta (daha zayıf performans) ----------
+        //Scenario D - Team Beta
         Scenario d = new Scenario(
-                "Scenario D \u2014 Team Beta",
+                "Scenario D - Team Beta",
                 "LMS system, average performance",
                 Mode.EDUCATION);
 
@@ -107,14 +103,14 @@ public class ScenarioRepository {
         scenariosByMode.put(Mode.EDUCATION, list);
     }
 
-    // ======================= HEALTH =======================
-    // sağlık yönetim sistemleri için kendi tasarladığım senaryolar
+    //  HEALTH 
+    // sağlık yönetim sistemleri için senaryolar
     private void loadHealthScenarios() {
         List<Scenario> list = new ArrayList<>();
 
-        // ---------- Scenario A — Hospital Management System ----------
+        //Scenario A - Hospital Management System
         Scenario a = new Scenario(
-                "Scenario A \u2014 Hospital Management",
+                "Scenario A - Hospital Management",
                 "Hospital-wide management system, high quality",
                 Mode.HEALTH);
 
@@ -140,9 +136,9 @@ public class ScenarioRepository {
 
         list.add(a);
 
-        // ---------- Scenario B — Clinic Management System ----------
+        //Scenario B - Clinic Management System
         Scenario b = new Scenario(
-                "Scenario B \u2014 Clinic Management",
+                "Scenario B - Clinic Management",
                 "Small clinic system, moderate performance",
                 Mode.HEALTH);
 
@@ -171,9 +167,8 @@ public class ScenarioRepository {
         scenariosByMode.put(Mode.HEALTH, list);
     }
 
-    // ======================= CUSTOM =======================
-    // Custom mod bonus, şimdilik boş bir placeholder senaryo koyuyoruz
-    // ileride kullanıcı buraya kendi dimension/metric'lerini ekleyebilir
+    // CUSTOM 
+    // Custom mod bonus, şimdilik boş bir placeholder
     private void loadCustomScenarios() {
         List<Scenario> list = new ArrayList<>();
         Scenario empty = new Scenario(

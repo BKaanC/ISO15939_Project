@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -22,15 +24,15 @@ import model.Metric;
 import model.Scenario;
 import model.Session;
 
-// Step 3 — Plan Measurement
+// Plan Measurement
 // seçilen senaryonun dimension + metric bilgilerini gösteriyoruz
-// read-only (kullanıcı değiştiremez, sadece bakıyor)
+// read-only (kullanıcı değiştiremez)
 public class PlanPanel extends JPanel implements WizardStep {
 
     private final Session session;
     private final Navigator navigator;
 
-    // içeriği her senaryo değiştiğinde yenilemek lazım, bu yüzden referansı tutuyoruz
+    // içeriği her senaryo değiştiğinde yenilemek lazım, bu yüzden referansı tutucaz
     private JPanel content;
 
     public PlanPanel(Session session, Navigator navigator) {
@@ -51,7 +53,7 @@ public class PlanPanel extends JPanel implements WizardStep {
         title.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         add(title, BorderLayout.NORTH);
 
-        // orta içerik — her dimension için ayrı başlık + tablo
+        // orta içerik  her dimension için ayrı başlık + tablo
         content = new JPanel();
         content.setOpaque(false);
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -67,7 +69,12 @@ public class PlanPanel extends JPanel implements WizardStep {
 
         JButton back = new JButton("\u2190 Back");
         back.setPreferredSize(new Dimension(110, 32));
-        back.addActionListener(e -> navigator.goBack());
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                navigator.goBack();
+            }
+        });
 
         JButton next = new JButton("Next \u2192");
         next.setPreferredSize(new Dimension(110, 32));
@@ -85,7 +92,7 @@ public class PlanPanel extends JPanel implements WizardStep {
 
         Scenario scenario = session.getScenario();
         if (scenario == null) {
-            // teorik olarak olmamalı ama yine de önlem
+            //önlem
             content.add(new JLabel("No scenario selected."));
         } else {
             // her dimension için bir başlık ve tablo ekle
@@ -100,6 +107,7 @@ public class PlanPanel extends JPanel implements WizardStep {
     }
 
     // tek bir dimension için başlık + metric tablosu döndürüyor
+    // not: java.awt.Dimension ile çakışmasın diye model.Dimension yazdım
     private JPanel buildDimensionSection(model.Dimension dim) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
@@ -136,10 +144,9 @@ public class PlanPanel extends JPanel implements WizardStep {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setFillsViewportHeight(true);
 
-        // tabloyu scroll içine koyuyoruz ama yüksekliğini satır sayısına göre ayarlıyoruz
+        // tabloyu scroll içine koyuyoruz
         JScrollPane tableScroll = new JScrollPane(table);
-        int rows = dim.getMetrics().size();
-        tableScroll.setPreferredSize(new Dimension(700, (rows + 1) * 24 + 4));
+        tableScroll.setPreferredSize(new Dimension(700, 120));
 
         panel.add(tableScroll, BorderLayout.CENTER);
         return panel;

@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,12 +20,12 @@ import javax.swing.JTextField;
 import controller.Navigator;
 import model.Session;
 
-// Step 1 — Profile
-// kullanıcıdan 3 bilgi alıyoruz: username, school, session name
-// "Next"e basıldığında boş alan varsa uyarı gösteriyoruz
+// Step 1 Profil
+// kullanıcıdan 3 bilgi alıyoruz: username school session name
+// next butonuna basıldığında boş alan varsa uyarı göstercez
 public class ProfilePanel extends JPanel implements WizardStep {
 
-    // MVC gereği session ve navigator'ı dışarıdan alıyoruz
+    // session ve navigator dışardan geliyor
     private final Session session;
     private final Navigator navigator;
 
@@ -38,19 +40,14 @@ public class ProfilePanel extends JPanel implements WizardStep {
 
         setBackground(Color.WHITE);
         setLayout(new GridBagLayout());
-        // etrafta biraz boşluk olsun
         setBorder(BorderFactory.createEmptyBorder(30, 60, 30, 60));
 
-        buildUi();
-    }
-
-    // tüm bileşenleri yerleştiriyoruz
-    private void buildUi() {
         GridBagConstraints gbc = new GridBagConstraints();
+
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // ---- başlık ----
+        // başlık
         JLabel title = new JLabel("Step 1: Profile");
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
         gbc.gridx = 0;
@@ -58,48 +55,45 @@ public class ProfilePanel extends JPanel implements WizardStep {
         gbc.gridwidth = 2;
         add(title, gbc);
 
-        // küçük açıklama
-        JLabel subtitle = new JLabel("Please enter your user and session information.");
-        subtitle.setForeground(new Color(107, 114, 128));
-        gbc.gridy = 1;
-        add(subtitle, gbc);
-
         gbc.gridwidth = 1;
 
-        // ---- Username ----
+        // Username
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(new JLabel("Username:"), gbc);
-
         usernameField = new JTextField(25);
         gbc.gridx = 1;
         add(usernameField, gbc);
 
-        // ---- School ----
+        // School
         gbc.gridx = 0;
         gbc.gridy = 3;
         add(new JLabel("School:"), gbc);
-
         schoolField = new JTextField(25);
         gbc.gridx = 1;
         add(schoolField, gbc);
 
-        // ---- Session Name ----
+        // Session Name
         gbc.gridx = 0;
         gbc.gridy = 4;
         add(new JLabel("Session Name:"), gbc);
-
         sessionNameField = new JTextField(25);
         gbc.gridx = 1;
         add(sessionNameField, gbc);
 
-        // ---- Next butonu (alt tarafta) ----
+        // alt tarafta Next butonu
         JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonRow.setOpaque(false);
 
-        JButton nextButton = new JButton("Next \u2192");
+        JButton nextButton = new JButton("Next →");
         nextButton.setPreferredSize(new Dimension(110, 32));
-        nextButton.addActionListener(e -> onNext());
+        // TODO: ileride enter tuşuna basınca da next'e tıklamış sayılsın
+        nextButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onNext();
+            }
+        });
         buttonRow.add(nextButton);
 
         gbc.gridx = 0;
@@ -109,43 +103,42 @@ public class ProfilePanel extends JPanel implements WizardStep {
         add(buttonRow, gbc);
     }
 
-    // Next'e tıklandığında çağrılıyor
+    // next butonuna basıldığında çalışır
     private void onNext() {
-        // her alanı teker teker kontrol et, kullanıcıya hangi alan eksik dürüstçe söyle
         String username = usernameField.getText().trim();
         String school = schoolField.getText().trim();
-        String sessionName = sessionNameField.getText().trim();
+
+        // ilk denemede tek mesaj gösteriyordum, sonra her alan için ayrı yaptım
+        // if (username.isEmpty() || school.isEmpty() || sessionName.isEmpty()) {
+        //     JOptionPane.showMessageDialog(this, "Please fill all fields");
+        //     return;
+        // }
 
         if (username.isEmpty()) {
-            showWarning("Please enter your username to continue.");
-            usernameField.requestFocus();
+            JOptionPane.showMessageDialog(this, "Please enter your username to continue.",
+                    "Missing information", JOptionPane.WARNING_MESSAGE);
             return;
         }
         if (school.isEmpty()) {
-            showWarning("Please enter your school to continue.");
-            schoolField.requestFocus();
+            JOptionPane.showMessageDialog(this, "Please enter your school to continue.",
+                    "Missing information", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (sessionName.isEmpty()) {
-            showWarning("Please enter a session name to continue.");
-            sessionNameField.requestFocus();
+        if (sessionNameField.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a session name to continue.",
+                    "Missing information", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // alanlar tamam, session'a yaz ve ilerle
+        // alanlar dolu sessiona kaydet ve ilerle
         session.setUsername(username);
         session.setSchool(school);
-        session.setSessionName(sessionName);
+        session.setSessionName(sessionNameField.getText().trim());
 
         navigator.goNext();
     }
 
-    // uyarı mesajı göstermek için ortak metod
-    private void showWarning(String message) {
-        JOptionPane.showMessageDialog(this, message, "Missing information", JOptionPane.WARNING_MESSAGE);
-    }
-
-    // panel ekrana geldiğinde çağıracağız (session'da daha önce yazılan varsa alanlara koy)
+    // panel ekrana geldiğinde session'da önceden yazılanları geri yükle
     @Override
     public void onShow() {
         if (session.getUsername() != null) usernameField.setText(session.getUsername());

@@ -11,21 +11,23 @@ import model.Session;
 import view.StepIndicator;
 import view.WizardStep;
 
-// wizard'ın beyni
+
 // - hangi adımdayız, yönetiyor
+
 // - goNext / goBack / goTo çağrılarında hem CardLayout'u hem StepIndicator'ı günceller
 // - panelin onShow()'unu çağırır
 // - Session ve ScenarioRepository'yi tutar (view'a sadece referans verir)
 public class WizardController implements Navigator {
 
-    // toplam adım sayısı
+    // toplam adım sayısı sabitt
     private static final int STEP_COUNT = 5;
 
     // model tarafı
     private final Session session;
+    
     private final ScenarioRepository repository;
 
-    // view tarafı (attachUi çağrıldıktan sonra set ediliyor)
+    // view tarafı (attachUi çağrıldıktan sonra dolduruluyor)
     private StepIndicator indicator;
     private CardLayout cardLayout;
     private JPanel cardHost;
@@ -34,7 +36,7 @@ public class WizardController implements Navigator {
     private final List<WizardStep> steps = new ArrayList<>();
     private final String[] cardNames = {"profile", "define", "plan", "collect", "analyse"};
 
-    // şu an gösterdiğimiz adımın indeksi
+    // şu anda gösterdiğimiz adımın Indexi
     private int currentIndex = 0;
 
     public WizardController(Session session, ScenarioRepository repository) {
@@ -53,14 +55,8 @@ public class WizardController implements Navigator {
 
     // view oluşturulduktan sonra ui bileşenlerini controller'a bağlıyoruz
     // paneller WizardStep'i implemente ettiği için sıralı liste olarak alıyoruz
-    public void attachUi(StepIndicator indicator,
-                         CardLayout cardLayout,
-                         JPanel cardHost,
-                         WizardStep profile,
-                         WizardStep define,
-                         WizardStep plan,
-                         WizardStep collect,
-                         WizardStep analyse) {
+    // TODO: ileride paneli runtime'da eklemek için bu metodu refactor et
+    public void attachUi(StepIndicator indicator,CardLayout cardLayout,JPanel cardHost,WizardStep profile, WizardStep define, WizardStep plan, WizardStep collect,WizardStep analyse) {
         this.indicator = indicator;
         this.cardLayout = cardLayout;
         this.cardHost = cardHost;
@@ -82,26 +78,24 @@ public class WizardController implements Navigator {
 
     @Override
     public void goNext() {
-        if (currentIndex < STEP_COUNT - 1) {
-            goTo(currentIndex + 1);
-        }
+        if (currentIndex < STEP_COUNT - 1) goTo(currentIndex + 1);
     }
 
     @Override
     public void goBack() {
-        if (currentIndex > 0) {
-            goTo(currentIndex - 1);
-        }
+        if (currentIndex > 0) goTo(currentIndex - 1);
     }
 
     @Override
     public void goTo(int stepIndex) {
-        // sınırlara sıkıştır
+        // System.out.println("debug: stepIndex = " + stepIndex);
+
+        // sınırlara sıkıştır kontrol et
         if (stepIndex < 0) stepIndex = 0;
         if (stepIndex > STEP_COUNT - 1) stepIndex = STEP_COUNT - 1;
         currentIndex = stepIndex;
 
-        // step indicator'ı güncelle
+        // step indicator'ı güncelle (sayaç)
         if (indicator != null) {
             indicator.setCurrentStep(stepIndex);
         }
@@ -117,8 +111,5 @@ public class WizardController implements Navigator {
         }
     }
 
-    // şu anki adım indeksini dışarı vermek gerekirse
-    public int getCurrentIndex() {
-        return currentIndex;
-    }
+   
 }

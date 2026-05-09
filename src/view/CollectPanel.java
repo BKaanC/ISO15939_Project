@@ -24,9 +24,8 @@ import model.Metric;
 import model.Scenario;
 import model.Session;
 
-// Step 4 — Collect Data
+//Collect Data
 // her metrik için ham değeri (value) ve hesaplanmış skoru gösteriyoruz
-// skor sütununu biraz renklendirdim ki görselliği düzgün olsun (gui quality kriteri)
 public class CollectPanel extends JPanel implements WizardStep {
 
     private final Session session;
@@ -98,6 +97,7 @@ public class CollectPanel extends JPanel implements WizardStep {
     }
 
     // bir dimension için tablo oluşturuyor, skor sütununu renkli gösteriyor
+    // not: java.awt.Dimension ile çakışmasın diye model.Dimension yazdım
     private JPanel buildDimensionSection(model.Dimension dim) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
@@ -108,7 +108,7 @@ public class CollectPanel extends JPanel implements WizardStep {
         header.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         panel.add(header, BorderLayout.NORTH);
 
-        // tablo kolonları — pdf'teki görünümle aynı
+        // tablo kolonları
         String[] columns = {"Metric", "Direction", "Range", "Value", "Score (1-5)", "Coeff / Unit"};
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override
@@ -124,7 +124,7 @@ public class CollectPanel extends JPanel implements WizardStep {
                     m.getDirectionLabel(),
                     m.getRangeLabel(),
                     formatValue(m.getValue()),
-                    formatScore(score),
+                    String.valueOf(score),
                     m.getCoefficient() + " / " + m.getUnit()
             };
             model.addRow(row);
@@ -134,12 +134,11 @@ public class CollectPanel extends JPanel implements WizardStep {
         table.setRowHeight(24);
         table.setFillsViewportHeight(true);
 
-        // skor sütununu skoruna göre renklendiren özel renderer
+        // skor sütununu skoruna göre renklendiren renderer
         table.getColumnModel().getColumn(4).setCellRenderer(new ScoreCellRenderer());
 
         JScrollPane tableScroll = new JScrollPane(table);
-        int rows = dim.getMetrics().size();
-        tableScroll.setPreferredSize(new Dimension(760, (rows + 1) * 24 + 4));
+        tableScroll.setPreferredSize(new Dimension(760, 120));
 
         panel.add(tableScroll, BorderLayout.CENTER);
         return panel;
@@ -149,11 +148,6 @@ public class CollectPanel extends JPanel implements WizardStep {
     private String formatValue(double v) {
         if (v == (int) v) return String.valueOf((int) v);
         return String.valueOf(v);
-    }
-
-    // skoru "5.0" veya "3.5" gibi basitçe yazdırıyoruz
-    private String formatScore(double s) {
-        return String.valueOf(s);
     }
 
     // skor hücresi için renklendirme renderer'ı
@@ -172,11 +166,11 @@ public class CollectPanel extends JPanel implements WizardStep {
                 try {
                     double score = Double.parseDouble(String.valueOf(value));
                     if (score >= 4.0) {
-                        c.setBackground(new Color(187, 247, 208)); // açık yeşil
+                        c.setBackground(new Color(180, 255, 180)); // açık yeşil
                     } else if (score >= 3.0) {
-                        c.setBackground(new Color(254, 240, 138)); // açık sarı
+                        c.setBackground(new Color(255, 255, 180)); // açık sarı
                     } else {
-                        c.setBackground(new Color(254, 202, 202)); // açık kırmızı
+                        c.setBackground(new Color(255, 180, 180)); // açık kırmızı
                     }
                 } catch (NumberFormatException ex) {
                     c.setBackground(Color.WHITE);

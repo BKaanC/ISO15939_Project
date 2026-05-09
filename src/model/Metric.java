@@ -1,13 +1,13 @@
 package model;
 
-// Metric = ölçülen tek bir şey (ör: SUS score, Onboarding time)
+// Metric ölçülen tek bir şey (SUS score, Onboarding time)
 // bu sınıf abstract çünkü skorun nasıl hesaplanacağı
 // metriğin yönüne göre değişiyor (Higher/Lower is better)
 // bu yüzden alt sınıflarda calculateScore metodu farklı olacak
 public abstract class Metric {
 
     // temel alanlar
-    protected String name;        // metriğin adı (ör: "SUS score")
+    protected String name;        // metriğin adı "SUS score"
     protected int coefficient;    // dimension içindeki ağırlığı (ör: 50)
     protected double minValue;    // geçerli aralığın alt sınırı
     protected double maxValue;    // geçerli aralığın üst sınırı
@@ -47,7 +47,7 @@ public abstract class Metric {
         return rounded;
     }
 
-    // ---- getter / setter'lar ----
+    // getter / setter
 
     public String getName() {
         return name;
@@ -77,11 +77,23 @@ public abstract class Metric {
         this.value = value;
     }
 
-    // range'i ekranda "0–100" şeklinde göstermek için hazır bir metin
+    // range'i ekranda "0-100" şeklinde göstermek için hazır bir metin
     public String getRangeLabel() {
         // tam sayı gibi görünüyorsa noktasız göster
-        String minStr = (minValue == (int) minValue) ? String.valueOf((int) minValue) : String.valueOf(minValue);
-        String maxStr = (maxValue == (int) maxValue) ? String.valueOf((int) maxValue) : String.valueOf(maxValue);
-        return minStr + "–" + maxStr;
+        String minStr;
+        if (minValue == (int) minValue) {
+            minStr = String.valueOf((int) minValue);
+        } else {
+            minStr = String.valueOf(minValue);
+        }
+
+        String maxStr;
+        if (maxValue == (int) maxValue) {
+            maxStr = String.valueOf((int) maxValue);
+        } else {
+            maxStr = String.valueOf(maxValue);
+        }
+
+        return minStr + "-" + maxStr;
     }
 }

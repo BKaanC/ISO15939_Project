@@ -27,12 +27,12 @@ import model.Scenario;
 import model.ScenarioRepository;
 import model.Session;
 
-// Step 2 — Define
-// 3 ayrı seçim var:
+// Step 2 Define
+// 3 seçim var:
 //   a) Quality Type (Product / Process)
 //   b) Mode          (Custom / Health / Education)
-//   c) Scenario      (modun senaryolarına göre değişir)
-// hepsi aynı anda tek seçimi zorunlu kıldığı için JRadioButton + ButtonGroup
+//   c) Scenario      (modun senaryosuna göre değişir)
+// hepsi tek seçimi zorunlu yaptığı için JRadioButton + ButtonGroup
 public class DefinePanel extends JPanel implements WizardStep {
 
     private final Session session;
@@ -50,7 +50,7 @@ public class DefinePanel extends JPanel implements WizardStep {
     private JRadioButton educationRadio;
     private ButtonGroup modeGroup;
 
-    // scenario listesi mode değiştikçe güncelleniyor, dinamik
+    // scenario listesi mode değiştikçe güncelleniyor
     private JPanel scenarioPanel;
     private ButtonGroup scenarioGroup;
     // her radio'ya karşılık gelen Scenario nesnesini hatırlamak için
@@ -94,10 +94,23 @@ public class DefinePanel extends JPanel implements WizardStep {
         add(scroll, BorderLayout.CENTER);
 
         // alt tarafta Back / Next butonları
-        add(buildButtonBar(), BorderLayout.SOUTH);
+        JPanel bar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bar.setOpaque(false);
+
+        JButton back = new JButton("← Back");
+        back.setPreferredSize(new Dimension(110, 32));
+        back.addActionListener(e -> navigator.goBack());
+
+        JButton next = new JButton("Next →");
+        next.setPreferredSize(new Dimension(110, 32));
+        next.addActionListener(e -> onNext());
+
+        bar.add(back);
+        bar.add(next);
+        add(bar, BorderLayout.SOUTH);
     }
 
-    // --- quality type grubu ---
+    // quality type grubu
     private JPanel buildQualitySection() {
         JPanel panel = new JPanel(new GridLayout(0, 1, 0, 4));
         panel.setOpaque(false);
@@ -121,7 +134,7 @@ public class DefinePanel extends JPanel implements WizardStep {
         return panel;
     }
 
-    // --- mode grubu ---
+    // mode grubu
     private JPanel buildModeSection() {
         JPanel panel = new JPanel(new GridLayout(0, 1, 0, 4));
         panel.setOpaque(false);
@@ -151,7 +164,7 @@ public class DefinePanel extends JPanel implements WizardStep {
         return panel;
     }
 
-    // --- scenario grubu (mode değişince içeriği değişir) ---
+    // scenario grubu (mode değişince içeriği değişir)
     private JPanel buildScenarioSection() {
         scenarioPanel = new JPanel();
         scenarioPanel.setLayout(new BoxLayout(scenarioPanel, BoxLayout.Y_AXIS));
@@ -188,33 +201,18 @@ public class DefinePanel extends JPanel implements WizardStep {
         scenarioPanel.repaint();
     }
 
-    // --- alt buton çubuğu ---
-    private JPanel buildButtonBar() {
-        JPanel bar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bar.setOpaque(false);
-
-        JButton back = new JButton("\u2190 Back");
-        back.setPreferredSize(new Dimension(110, 32));
-        back.addActionListener(e -> navigator.goBack());
-
-        JButton next = new JButton("Next \u2192");
-        next.setPreferredSize(new Dimension(110, 32));
-        next.addActionListener(e -> onNext());
-
-        bar.add(back);
-        bar.add(next);
-        return bar;
-    }
-
     // Next'e basıldığında tüm seçimler yapılmış olmalı
     private void onNext() {
+        // System.out.println("DEBUG: Next clicked at step 2");
+
         // 1) quality type seçildi mi
         QualityType qt = null;
         if (productRadio.isSelected()) qt = QualityType.PRODUCT;
         else if (processRadio.isSelected()) qt = QualityType.PROCESS;
 
         if (qt == null) {
-            warn("Please select a quality type (Product or Process).");
+            JOptionPane.showMessageDialog(this, "Please select a quality type (Product or Process).",
+                    "Missing information", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -225,7 +223,8 @@ public class DefinePanel extends JPanel implements WizardStep {
         else if (educationRadio.isSelected()) mode = Mode.EDUCATION;
 
         if (mode == null) {
-            warn("Please select a mode (Health, Education or Custom).");
+            JOptionPane.showMessageDialog(this, "Please select a mode (Health, Education or Custom).",
+                    "Missing information", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -238,20 +237,17 @@ public class DefinePanel extends JPanel implements WizardStep {
             }
         }
         if (chosen == null) {
-            warn("Please select a scenario to continue.");
+            JOptionPane.showMessageDialog(this, "Please select a scenario to continue.",
+                    "Missing information", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // hepsi tamam — session'a yaz
+        // hepsi tamam session'a yaz
         session.setQualityType(qt);
         session.setMode(mode);
         session.setScenario(chosen);
 
         navigator.goNext();
-    }
-
-    private void warn(String message) {
-        JOptionPane.showMessageDialog(this, message, "Missing information", JOptionPane.WARNING_MESSAGE);
     }
 
     // panel tekrar ekrana geldiğinde önceki seçimleri geri yükle
