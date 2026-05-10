@@ -101,8 +101,8 @@ docs/
 The Custom mode is listed in the assignment description as a *Bonus
 feature* but no specific points are given for it in the evaluation table.
 For this reason I preferred to focus on the core 5 steps and the radar chart
-bonus, which is explicitly worth +10%. The Custom mode is therefore left as
-a placeholder in the scenario list.
+bonus, which is explicitly worth +10%. The Custom mode option is therefore
+disabled in the user interface.
 
 ---
 
