@@ -140,12 +140,15 @@ public class DefinePanel extends JPanel implements WizardStep {
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createTitledBorder("Mode"));
 
-        customRadio    = new JRadioButton(Mode.CUSTOM.getLabel()    + " (bonus, empty scenario)");
+        customRadio    = new JRadioButton(Mode.CUSTOM.getLabel()    + " (not implemented)");
         healthRadio    = new JRadioButton(Mode.HEALTH.getLabel());
         educationRadio = new JRadioButton(Mode.EDUCATION.getLabel());
         customRadio.setOpaque(false);
         healthRadio.setOpaque(false);
         educationRadio.setOpaque(false);
+
+        // custom mod bonus, gerek görmedim, disable
+        customRadio.setEnabled(false);
 
         modeGroup = new ButtonGroup();
         modeGroup.add(customRadio);
