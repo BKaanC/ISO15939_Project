@@ -20,6 +20,12 @@ chart and a gap analysis.
 
 ---
 
+## Presentation Video
+
+📹 [Watch the 5-minute presentation video on YouTube](https://www.youtube.com/watch?v=iEDByImQyz0)
+
+---
+
 ## Screenshot
 
 ![Step 5 - Analyse](docs/screenshot.png)
